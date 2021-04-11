@@ -9,18 +9,34 @@
 #include "Terminal.h"
 #include "Transition.h"
 #include "StateTransitionFunction.h"
-#include "Exceptions/TransitionFunctionNotFound.h"
-#include "Exceptions/StateIsNotFinalState.h"
-
-using namespace std;
+#include "Errors/Error.h"
 
 
+struct FiniteStateMachineProcessResult
+{
+	bool isProcessed;
+	Error error;
+
+protected:
+	FiniteStateMachineProcessResult(bool isProcessed, Error error): isProcessed(isProcessed), error(error) { }
+};
+
+struct FiniteStateMachineSuccessfulProcessResult: public FiniteStateMachineProcessResult
+{
+public:
+	FiniteStateMachineSuccessfulProcessResult(): FiniteStateMachineProcessResult(true, Error("No error")) { }
+};
+
+class FiniteStateMachineFailedProcessResult: public FiniteStateMachineProcessResult
+{
+public:
+	FiniteStateMachineFailedProcessResult(Error error): FiniteStateMachineProcessResult(false, error) { }
+};
 
 class FiniteStateMachine
 {
 private:
 	int initialState;
-	unsigned int transitionCount;
 	std::set<int> finalStates;
 	std::vector<StateTransitionFunction> stateTransitionFunctions;
 	std::function<void()> doneFunction;
@@ -30,11 +46,9 @@ public:
 	FiniteStateMachine(int initialState, std::vector<StateTransitionFunction> stateTransitionFunctions, std::set<int> finalStates, std::function<void()> doneFunction);
 	virtual ~FiniteStateMachine() { };
 
-	void process(std::vector<Terminal*> terminals);
+	FiniteStateMachineProcessResult process(std::vector<Terminal*> terminals);
 
 private:
-	StateTransitionFunction& findStateTransitionFunction(int state, Terminal& t);
-	void checkFinalStates(int state);
+	bool containSetOfFinalStatesLastState(int state);
 	void executeTransitionFunctions(std::vector<Transition>& transitions);
 };
-
