@@ -1,21 +1,16 @@
 #pragma once
-#include <functional>
-#include <vector>
+#include <type_traits>
 
-#include "Symbol.h"
+#include "BasicStateTransitionFunction.h"
 
 
 namespace FSM
 {
-	struct StateTransitionFunction
+    template<typename STATE, typename = std::enable_if<std::is_enum<STATE>::value>>
+	struct StateTransitionFunction: public BasicStateTransitionFunction
 	{
-	public:
-		int state;
-		Symbol symbol;
-		int destinationState;
-		std::function<void(Symbol& symbol)> userFunction;
-
-		StateTransitionFunction(int state, Symbol symbol, int destinationState, std::function<void(Symbol& symbol)> userFunction = [](Symbol& symbol) {})
-			: state(state), symbol(symbol), destinationState(destinationState), userFunction(userFunction) { }
+    public:
+		StateTransitionFunction(const STATE state, const Symbol& symbol, const STATE destinationState, std::function<void(const Symbol& symbol)> userFunction = [](const Symbol& symbol) {})
+			: BasicStateTransitionFunction(state, symbol, destinationState, userFunction) { }
 	};
 }

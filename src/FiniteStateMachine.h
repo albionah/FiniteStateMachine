@@ -1,37 +1,19 @@
-#pragma once
-#include <iostream>
-#include <functional>
-#include <algorithm>
-#include <vector>
-#include <set>
-#include <iterator>
+#include <type_traits>
 
-#include "Symbol.h"
-#include "Transition.h"
+#include "BasicFiniteStateMachine.h"
 #include "StateTransitionFunction.h"
-#include "Errors/Error.h"
-#include "ProcessResult/ProcessResult.h"
 
 
 namespace FSM
 {
-	class FiniteStateMachine
-	{
-	private:
-		int initialState;
-		std::set<int> finalStates;
-		std::vector<StateTransitionFunction> stateTransitionFunctions;
-		std::function<void()> doneFunction;
-
-	public:
-		FiniteStateMachine(int initialState, std::vector<StateTransitionFunction> stateTransitionFunctions, std::set<int> finalStates);
-		FiniteStateMachine(int initialState, std::vector<StateTransitionFunction> stateTransitionFunctions, std::set<int> finalStates, std::function<void()> userDoneFunction);
+    template<typename STATE, typename = std::enable_if<std::is_enum<STATE>::value>>
+    class FiniteStateMachine: public BasicFiniteStateMachine
+    {
+    public:
+        FiniteStateMachine(const STATE initialState, const std::vector<StateTransitionFunction<STATE>>& stateTransitionFunctions, const std::set<STATE>& finalStates)
+            : BasicFiniteStateMachine((const int) initialState, (const std::vector<BasicStateTransitionFunction>&) stateTransitionFunctions, (const std::set<int>&) finalStates) { }
+		FiniteStateMachine(const STATE initialState, const std::vector<StateTransitionFunction<STATE>>& stateTransitionFunctions, const std::set<STATE>& finalStates, std::function<void()> userFinalFunction)
+            : BasicFiniteStateMachine((const int) initialState, (const std::vector<BasicStateTransitionFunction>&) stateTransitionFunctions, (const std::set<int>&) finalStates, userFinalFunction) { }
 		virtual ~FiniteStateMachine() { };
-
-		ProcessResult process(std::vector<Symbol*> symbols);
-
-	private:
-		bool containSetOfFinalStatesLastState(int state);
-		void executeTransitionFunctions(std::vector<Transition>& transitions);
-	};
+    };
 }

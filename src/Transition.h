@@ -10,10 +10,10 @@ namespace FSM
 	struct Transition
 	{
 	public:
-		Symbol* symbol;
-		std::function<void(Symbol& symbol)> function;
+		const Symbol& symbol;
+		std::function<void(const Symbol& symbol)> function;
 
-		Transition(std::function<void(Symbol& symbol)>& function, Symbol* symbol)
+		Transition(std::function<void(const Symbol& symbol)>& function, const Symbol& symbol)
 			: function(function), symbol(symbol) { }
 	};
 }
