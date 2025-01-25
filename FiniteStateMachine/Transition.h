@@ -2,18 +2,18 @@
 #include <functional>
 #include <vector>
 
-#include "Terminal.h"
+#include "Symbol.h"
 
 
-
-struct Transition
+namespace FSM
 {
-	Transition(std::function<void(Terminal& t)>& function, Terminal* terminal)
+	struct Transition
 	{
-		this->function = function;
-		this->terminal = terminal;
-	}
+	public:
+		const Symbol& symbol;
+		std::function<void(const Symbol& symbol)> function;
 
-	std::function<void(Terminal& t)> function;
-	Terminal* terminal;
-};
+		Transition(std::function<void(const Symbol& symbol)>& function, const Symbol& symbol)
+			: function(function), symbol(symbol) { }
+	};
+}

@@ -2,6 +2,13 @@
 
 FiniteStateMachine is a C++ library for deterministic processing input with predefined rules. Read more about it here: https://en.wikipedia.org/wiki/Finite-state_machine
 
+## Instalation
+
+Call
+```bash
+git submodule update --init
+```
+
 ## Usage
 
 Basically a finite state machine has 3 input parameters:

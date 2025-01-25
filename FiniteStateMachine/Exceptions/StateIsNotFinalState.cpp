@@ -1,6 +1,6 @@
-#pragma once
 #include "StateIsNotFinalState.h"
 
+#include "../Language.h"
 
 
 StateIsNotFinalState::StateIsNotFinalState(const char* file, const char* function, unsigned int line, unsigned int transitionCount)

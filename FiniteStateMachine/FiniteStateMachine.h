@@ -1,40 +1,19 @@
-#pragma once
-#include <iostream>
-#include <functional>
-#include <algorithm>
-#include <vector>
-#include <set>
-#include <iterator>
+#include <type_traits>
 
-#include "Terminal.h"
-#include "Transition.h"
+#include "BasicFiniteStateMachine.h"
 #include "StateTransitionFunction.h"
-#include "Exceptions/TransitionFunctionNotFound.h"
-#include "Exceptions/StateIsNotFinalState.h"
-
-using namespace std;
 
 
-
-class FiniteStateMachine
+namespace FSM
 {
-private:
-	int initialState;
-	unsigned int transitionCount;
-	std::set<int> finalStates;
-	std::vector<StateTransitionFunction> stateTransitionFunctions;
-	std::function<void()> doneFunction;
-
+    template<typename STATE, typename = std::enable_if<std::is_enum<STATE>::value>>
+    class FiniteStateMachine: public BasicFiniteStateMachine
+    {
 public:
-	FiniteStateMachine(int initialState, std::vector<StateTransitionFunction> stateTransitionFunctions, std::set<int> finalStates);
-	FiniteStateMachine(int initialState, std::vector<StateTransitionFunction> stateTransitionFunctions, std::set<int> finalStates, std::function<void()> doneFunction);
+        FiniteStateMachine(const STATE initialState, const std::vector<StateTransitionFunction<STATE>>& stateTransitionFunctions, const std::set<STATE>& finalStates)
+            : BasicFiniteStateMachine((const int) initialState, (const std::vector<BasicStateTransitionFunction>&) stateTransitionFunctions, (const std::set<int>&) finalStates) { }
+		FiniteStateMachine(const STATE initialState, const std::vector<StateTransitionFunction<STATE>>& stateTransitionFunctions, const std::set<STATE>& finalStates, std::function<void()> userFinalFunction)
+            : BasicFiniteStateMachine((const int) initialState, (const std::vector<BasicStateTransitionFunction>&) stateTransitionFunctions, (const std::set<int>&) finalStates, userFinalFunction) { }
 	virtual ~FiniteStateMachine() { };
-
-	void process(std::vector<Terminal*> terminals);
-
-private:
-	StateTransitionFunction& findStateTransitionFunction(int state, Terminal& t);
-	void checkFinalStates(int state);
-	void executeTransitionFunctions(std::vector<Transition>& transitions);
 };
-
+}

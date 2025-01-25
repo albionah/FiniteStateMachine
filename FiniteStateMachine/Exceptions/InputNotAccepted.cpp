@@ -1,6 +1,6 @@
-#pragma once
 #include "InputNotAccepted.h"
 
+#include "../Language.h"
 
 
 InputNotAccepted::InputNotAccepted(const char* file, const char* function, unsigned int line, const char* message, unsigned int transitionCount)

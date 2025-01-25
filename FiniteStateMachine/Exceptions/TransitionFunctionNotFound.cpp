@@ -1,6 +1,6 @@
-#pragma once
 #include "TransitionFunctionNotFound.h"
 
+#include "../Language.h"
 
 
 TransitionFunctionNotFound::TransitionFunctionNotFound(const char* file, const char* function, unsigned int line, unsigned int transitionCount)
