@@ -9,8 +9,6 @@
 #include "Symbol.h"
 #include "Transition.h"
 #include "StateTransitionFunction.h"
-#include "Errors/Error.h"
-#include "ProcessResult/ProcessResult.h"
 
 
 namespace FSM
@@ -19,6 +17,7 @@ namespace FSM
 	{
 	private:
 		int initialState;
+		unsigned int transitionCount;
 		std::set<int> finalStates;
 		std::vector<BasicStateTransitionFunction> stateTransitionFunctions;
 		std::function<void()> userFinalFunction;
@@ -28,7 +27,7 @@ namespace FSM
 		BasicFiniteStateMachine(const int initialState, const std::vector<BasicStateTransitionFunction>& stateTransitionFunctions, const std::set<int>& finalStates, std::function<void()> userFinalFunction);
 		virtual ~BasicFiniteStateMachine() { };
 
-		ProcessResult process(std::vector<Symbol> symbols);
+		void process(std::vector<Symbol> symbols);
 
 	private:
 		bool containSetOfFinalStatesLastState(int state);

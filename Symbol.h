@@ -8,6 +8,7 @@ namespace FSM
 	public:
 		int type;
 
-		Symbol(int type): type(type) { }
+		Symbol(int type)
+			: type(type) { }
 	};
 }
