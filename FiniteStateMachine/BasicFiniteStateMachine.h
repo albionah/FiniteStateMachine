@@ -5,6 +5,7 @@
 #include <vector>
 #include <set>
 #include <iterator>
+#include <memory>
 
 #include "Symbol.h"
 #include "Transition.h"
@@ -27,7 +28,7 @@ namespace FSM
 		BasicFiniteStateMachine(const int initialState, const std::vector<BasicStateTransitionFunction>& stateTransitionFunctions, const std::set<int>& finalStates, std::function<void()> userFinalFunction);
 		virtual ~BasicFiniteStateMachine() { };
 
-		void process(std::vector<Symbol> symbols);
+		void process(const std::vector<std::unique_ptr<Symbol>>& symbols);
 
 	private:
 		bool containSetOfFinalStatesLastState(int state);

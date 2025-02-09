@@ -24,21 +24,21 @@ namespace FSM
 	}
 
 
-	void BasicFiniteStateMachine::process(std::vector<Symbol> symbols)
+	void BasicFiniteStateMachine::process(const std::vector<std::unique_ptr<Symbol>>& symbols)
 	{
 		int state = this->initialState;
 		std::vector<Transition> transitions;
 
-		for (const Symbol& symbol : symbols)
+		for (const std::unique_ptr<Symbol>& symbol : symbols)
 		{
 			auto iterator = std::find_if(this->stateTransitionFunctions.begin(), this->stateTransitionFunctions.end(), [&state, &symbol](const BasicStateTransitionFunction& fn)
-				{return (fn.state == state && fn.symbol.type == symbol.type);});
+				{return (fn.state == state && fn.symbol.type == symbol->type);});
 			if (iterator == this->stateTransitionFunctions.end())
 			{
 				throw TransitionFunctionNotFound(__FILE__, __func__, __LINE__, this->transitionCount);
 			}
 			auto stateTransitionFunction = *iterator;
-			transitions.push_back(Transition(stateTransitionFunction.userFunction, symbol));
+			transitions.push_back(Transition(stateTransitionFunction.userFunction, *symbol));
 			state = stateTransitionFunction.destinationState;
 		}
 
